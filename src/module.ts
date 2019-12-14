@@ -7,8 +7,12 @@ import { createSetTargetAutomationEvent } from './functions/create-set-target-au
 import { createSetValueAutomationEvent } from './functions/create-set-value-automation-event';
 import { createSetValueCurveAutomationEvent } from './functions/create-set-value-curve-automation-event';
 
-export * from './interfaces';
-export * from './types';
+/*
+ * @todo Explicitly referencing the barrel file seems to be necessary when enabling the
+ * isolatedModules compiler option.
+ */
+export * from './interfaces/index';
+export * from './types/index';
 
 export { AutomationEventList };
 
