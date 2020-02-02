@@ -1,4 +1,5 @@
 module.exports = (grunt) => {
+    const continuous = (grunt.option('continuous') === true);
     const fix = (grunt.option('fix') === true);
 
     return {
@@ -17,7 +18,10 @@ module.exports = (grunt) => {
         'lint-test': {
             cmd: `eslint --config config/eslint/test.json --ext .js ${ (fix) ? '--fix ' : '' }--report-unused-disable-directives test/`
         },
-        'test-unit': {
+        'test-unit-browser': {
+            cmd: `karma start config/karma/config-unit.js ${ continuous ? '--concurrency Infinity' : '--single-run' }`
+        },
+        'test-unit-node': {
             cmd: 'mocha --bail --recursive --require config/mocha/config-unit.js test/unit'
         }
     };

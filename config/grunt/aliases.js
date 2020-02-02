@@ -12,7 +12,7 @@ module.exports = {
     ],
     test: [
         'build',
-        'karma:test',
-        'sh:test-unit'
+        'sh:test-unit-browser',
+        'sh:test-unit-node'
     ]
 };
