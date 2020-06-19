@@ -9,9 +9,7 @@ import { createSetValueCurveAutomationEvent } from '../../../src/functions/creat
 import { interpolateValue } from '../../../src/functions/interpolate-value';
 
 describe('AutomationEventList', () => {
-
     describe('add()', () => {
-
         let automationEventList;
         let defaultValue;
 
@@ -21,7 +19,6 @@ describe('AutomationEventList', () => {
         });
 
         describe('with an event of type cancelAndHold', () => {
-
             beforeEach(() => {
                 automationEventList.add(createSetValueAutomationEvent(1, 12));
                 automationEventList.add(createSetValueAutomationEvent(0, 10));
@@ -30,21 +27,16 @@ describe('AutomationEventList', () => {
             it('should remove events with an event time above the cancelTime', () => {
                 expect(automationEventList.add(createCancelAndHoldAutomationEvent(11))).to.be.true;
 
-                expect(Array.from(automationEventList)).to.deep.equal([
-                    { startTime: 10, type: 'setValue', value: 0 }
-                ]);
+                expect(Array.from(automationEventList)).to.deep.equal([{ startTime: 10, type: 'setValue', value: 0 }]);
             });
 
             it('should remove events with an event time that equals the cancelTime', () => {
                 expect(automationEventList.add(createCancelAndHoldAutomationEvent(12))).to.be.true;
 
-                expect(Array.from(automationEventList)).to.deep.equal([
-                    { startTime: 10, type: 'setValue', value: 0 }
-                ]);
+                expect(Array.from(automationEventList)).to.deep.equal([{ startTime: 10, type: 'setValue', value: 0 }]);
             });
 
             describe('with an event of type exponentialRampToValue with an endTime after cancelTime', () => {
-
                 beforeEach(() => {
                     automationEventList.add(createExponentialRampToValueAutomationEvent(0.75, 11.5));
                 });
@@ -57,11 +49,9 @@ describe('AutomationEventList', () => {
                         { endTime: 11, insertTime: 0, type: 'exponentialRampToValue', value: 0 }
                     ]);
                 });
-
             });
 
             describe('with an event of type linearRampToValue with an endTime after cancelTime', () => {
-
                 beforeEach(() => {
                     automationEventList.add(createLinearRampToValueAutomationEvent(0.75, 11.5));
                 });
@@ -74,13 +64,11 @@ describe('AutomationEventList', () => {
                         { endTime: 11, insertTime: 0, type: 'linearRampToValue', value: 0.5 }
                     ]);
                 });
-
             });
 
             describe('with an event of type setValueCurve with a startTime before cancelTime', () => {
-
                 beforeEach(() => {
-                    automationEventList.add(createSetValueCurveAutomationEvent(new Float32Array([ 6, 7, 8 ]), 10, 2));
+                    automationEventList.add(createSetValueCurveAutomationEvent(new Float32Array([6, 7, 8]), 10, 2));
                 });
 
                 it('should truncate the setValueCurve automation by replacing it', () => {
@@ -88,14 +76,12 @@ describe('AutomationEventList', () => {
 
                     expect(Array.from(automationEventList)).to.deep.equal([
                         { startTime: 10, type: 'setValue', value: 0 },
-                        { duration: 1, startTime: 10, type: 'setValueCurve', values: new Float32Array([ 6, 7 ]) }
+                        { duration: 1, startTime: 10, type: 'setValueCurve', values: new Float32Array([6, 7]) }
                     ]);
                 });
-
             });
 
             describe('with an event of type setTarget with a startTime before cancelTime', () => {
-
                 beforeEach(() => {
                     automationEventList.add(createSetTargetAutomationEvent(0, 10, 1));
                 });
@@ -109,13 +95,10 @@ describe('AutomationEventList', () => {
                         { startTime: 11, type: 'setValue', value: defaultValue * Math.exp(-1) }
                     ]);
                 });
-
             });
-
         });
 
         describe('with an event of type cancelScheduledValues', () => {
-
             beforeEach(() => {
                 automationEventList.add(createSetValueAutomationEvent(1, 12));
                 automationEventList.add(createSetValueAutomationEvent(0, 10));
@@ -124,23 +107,17 @@ describe('AutomationEventList', () => {
             it('should remove events with an event time above the cancelTime', () => {
                 expect(automationEventList.add(createCancelScheduledValuesAutomationEvent(11))).to.be.true;
 
-                expect(Array.from(automationEventList)).to.deep.equal([
-                    { startTime: 10, type: 'setValue', value: 0 }
-                ]);
+                expect(Array.from(automationEventList)).to.deep.equal([{ startTime: 10, type: 'setValue', value: 0 }]);
             });
 
             it('should remove events with an event time that equals the cancelTime', () => {
                 expect(automationEventList.add(createCancelScheduledValuesAutomationEvent(12))).to.be.true;
 
-                expect(Array.from(automationEventList)).to.deep.equal([
-                    { startTime: 10, type: 'setValue', value: 0 }
-                ]);
+                expect(Array.from(automationEventList)).to.deep.equal([{ startTime: 10, type: 'setValue', value: 0 }]);
             });
-
         });
 
         describe('with an event of type exponentialRampToValue', () => {
-
             beforeEach(() => {
                 automationEventList.add(createExponentialRampToValueAutomationEvent(1, 12));
             });
@@ -164,7 +141,7 @@ describe('AutomationEventList', () => {
             });
 
             it('should not add an event which has an event time that overlaps with a previous event of type setValueCurve', () => {
-                const values = new Float32Array([ 5, 4, 3 ]);
+                const values = new Float32Array([5, 4, 3]);
 
                 automationEventList.add(createSetValueCurveAutomationEvent(values, 13, 2));
 
@@ -175,11 +152,9 @@ describe('AutomationEventList', () => {
                     { duration: 2, startTime: 13, type: 'setValueCurve', values }
                 ]);
             });
-
         });
 
         describe('with an event of type linearRampToValue', () => {
-
             beforeEach(() => {
                 automationEventList.add(createLinearRampToValueAutomationEvent(1, 12));
             });
@@ -203,7 +178,7 @@ describe('AutomationEventList', () => {
             });
 
             it('should not add an event which has an event time that overlaps with a previous event of type setValueCurve', () => {
-                const values = new Float32Array([ 5, 4, 3 ]);
+                const values = new Float32Array([5, 4, 3]);
 
                 automationEventList.add(createSetValueCurveAutomationEvent(values, 13, 2));
 
@@ -214,11 +189,9 @@ describe('AutomationEventList', () => {
                     { duration: 2, startTime: 13, type: 'setValueCurve', values }
                 ]);
             });
-
         });
 
         describe('with an event of type setTarget', () => {
-
             beforeEach(() => {
                 automationEventList.add(createSetTargetAutomationEvent(1, 12, 0.5));
             });
@@ -242,7 +215,7 @@ describe('AutomationEventList', () => {
             });
 
             it('should not add an event which has an event time that overlaps with a previous event of type setValueCurve', () => {
-                const values = new Float32Array([ 5, 4, 3 ]);
+                const values = new Float32Array([5, 4, 3]);
 
                 automationEventList.add(createSetValueCurveAutomationEvent(values, 13, 2));
 
@@ -253,11 +226,9 @@ describe('AutomationEventList', () => {
                     { duration: 2, startTime: 13, type: 'setValueCurve', values }
                 ]);
             });
-
         });
 
         describe('with an event of type setValue', () => {
-
             beforeEach(() => {
                 automationEventList.add(createSetValueAutomationEvent(1, 12));
             });
@@ -281,7 +252,7 @@ describe('AutomationEventList', () => {
             });
 
             it('should not add an event which has an event time that overlaps with a previous event of type setValueCurve', () => {
-                const values = new Float32Array([ 5, 4, 3 ]);
+                const values = new Float32Array([5, 4, 3]);
 
                 automationEventList.add(createSetValueCurveAutomationEvent(values, 13, 2));
 
@@ -292,15 +263,13 @@ describe('AutomationEventList', () => {
                     { duration: 2, startTime: 13, type: 'setValueCurve', values }
                 ]);
             });
-
         });
 
         describe('with an event of type setValueCurve', () => {
-
             let values;
 
             beforeEach(() => {
-                values = [ new Float32Array([ 5, 4, 3 ]), new Float32Array([ 4, 5, 6 ]) ];
+                values = [new Float32Array([5, 4, 3]), new Float32Array([4, 5, 6])];
 
                 automationEventList.add(createSetValueCurveAutomationEvent(values[0], 12, 4));
             });
@@ -329,15 +298,11 @@ describe('AutomationEventList', () => {
                     { duration: 4, startTime: 12, type: 'setValueCurve', values: values[0] }
                 ]);
             });
-
         });
-
     });
 
     describe('flush()', () => {
-
         describe('with events of type setTarget', () => {
-
             let automationEventList;
 
             beforeEach(() => {
@@ -371,11 +336,9 @@ describe('AutomationEventList', () => {
                     { startTime: 16, target: 0, timeConstant: 3, type: 'setTarget' }
                 ]);
             });
-
         });
 
         describe('with events of type setValue', () => {
-
             let automationEventList;
 
             beforeEach(() => {
@@ -407,13 +370,10 @@ describe('AutomationEventList', () => {
                     { startTime: 16, type: 'setValue', value: 0 }
                 ]);
             });
-
         });
-
     });
 
     describe('getValue()', () => {
-
         let automationEventList;
         let defaultValue;
 
@@ -423,17 +383,13 @@ describe('AutomationEventList', () => {
         });
 
         describe('without any event', () => {
-
             it('should return the defaultValue', () => {
                 expect(automationEventList.getValue(Math.random())).to.equal(defaultValue);
             });
-
         });
 
         describe('without a previous event', () => {
-
             describe('with an event of type exponentialRampToValue', () => {
-
                 let value;
                 let endTime;
 
@@ -447,7 +403,7 @@ describe('AutomationEventList', () => {
                 it('should return the modified value before the endTime', () => {
                     const time = endTime * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(defaultValue * ((value / defaultValue) ** (time / endTime)));
+                    expect(automationEventList.getValue(time)).to.equal(defaultValue * (value / defaultValue) ** (time / endTime));
                 });
 
                 it('should return the value from the endTime onwards', () => {
@@ -455,11 +411,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type linearRampToValue', () => {
-
                 let value;
                 let endTime;
 
@@ -473,7 +427,7 @@ describe('AutomationEventList', () => {
                 it('should return the modified value before the endTime', () => {
                     const time = endTime * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(defaultValue + (time / endTime * (value - defaultValue)));
+                    expect(automationEventList.getValue(time)).to.equal(defaultValue + (time / endTime) * (value - defaultValue));
                 });
 
                 it('should return the value from the endTime onwards', () => {
@@ -481,11 +435,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type setTarget', () => {
-
                 let startTime;
                 let target;
                 let timeConstant;
@@ -507,13 +459,13 @@ describe('AutomationEventList', () => {
                 it('should return the modified value from the startTime onwards', () => {
                     const time = startTime + Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(target + ((defaultValue - target) * Math.exp((startTime - time) / timeConstant)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        target + (defaultValue - target) * Math.exp((startTime - time) / timeConstant)
+                    );
                 });
-
             });
 
             describe('with an event of type setValue', () => {
-
                 let startTime;
                 let value;
 
@@ -535,11 +487,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type setValueCurve', () => {
-
                 let duration;
                 let startTime;
                 let values;
@@ -547,7 +497,7 @@ describe('AutomationEventList', () => {
                 beforeEach(() => {
                     duration = Math.random();
                     startTime = Math.random();
-                    values = new Float32Array([ 0, 1 ]);
+                    values = new Float32Array([0, 1]);
 
                     automationEventList.add(createSetValueCurveAutomationEvent(values, startTime, duration));
                 });
@@ -559,7 +509,7 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return an interpolated value during the duration', () => {
-                    const time = startTime + (Math.random() * duration);
+                    const time = startTime + Math.random() * duration;
 
                     expect(automationEventList.getValue(time)).to.equal(interpolateValue(values, (time - startTime) / duration));
                 });
@@ -567,15 +517,12 @@ describe('AutomationEventList', () => {
                 it('should return the value of the last bin after the event', () => {
                     const time = startTime + duration + Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(values[ values.length - 1 ]);
+                    expect(automationEventList.getValue(time)).to.equal(values[values.length - 1]);
                 });
-
             });
-
         });
 
         describe('with a previous event of type exponentialRampToValue', () => {
-
             let exponentialRampToValueAutomationEvent;
             let offset;
 
@@ -589,7 +536,6 @@ describe('AutomationEventList', () => {
             });
 
             describe('with an event of type exponentialRampToValue', () => {
-
                 let value;
                 let endTime;
 
@@ -601,9 +547,12 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value before the endTime', () => {
-                    const time = offset + ((endTime - offset) * Math.random());
+                    const time = offset + (endTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(exponentialRampToValueAutomationEvent.value * ((value / exponentialRampToValueAutomationEvent.value) ** ((time - offset) / (endTime - offset))));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        exponentialRampToValueAutomationEvent.value *
+                            (value / exponentialRampToValueAutomationEvent.value) ** ((time - offset) / (endTime - offset))
+                    );
                 });
 
                 it('should return the value from the endTime onwards', () => {
@@ -611,11 +560,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type linearRampToValue', () => {
-
                 let value;
                 let endTime;
 
@@ -627,9 +574,12 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value before the endTime', () => {
-                    const time = offset + ((endTime - offset) * Math.random());
+                    const time = offset + (endTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(exponentialRampToValueAutomationEvent.value + ((time - offset) / (endTime - offset) * (value - exponentialRampToValueAutomationEvent.value)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        exponentialRampToValueAutomationEvent.value +
+                            ((time - offset) / (endTime - offset)) * (value - exponentialRampToValueAutomationEvent.value)
+                    );
                 });
 
                 it('should return the value from the endTime onwards', () => {
@@ -637,11 +587,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type setTarget', () => {
-
                 let startTime;
                 let target;
                 let timeConstant;
@@ -655,7 +603,7 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the value of the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(exponentialRampToValueAutomationEvent.value);
                 });
@@ -663,13 +611,13 @@ describe('AutomationEventList', () => {
                 it('should return the modified value from the startTime onwards', () => {
                     const time = startTime + Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(target + ((defaultValue - target) * Math.exp((startTime - time) / timeConstant)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        target + (defaultValue - target) * Math.exp((startTime - time) / timeConstant)
+                    );
                 });
-
             });
 
             describe('with an event of type setValue', () => {
-
                 let startTime;
                 let value;
 
@@ -681,7 +629,7 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the value of the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(exponentialRampToValueAutomationEvent.value);
                 });
@@ -691,11 +639,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type setValueCurve', () => {
-
                 let duration;
                 let startTime;
                 let values;
@@ -703,19 +649,19 @@ describe('AutomationEventList', () => {
                 beforeEach(() => {
                     duration = Math.random();
                     startTime = offset + Math.random();
-                    values = new Float32Array([ 0, 1 ]);
+                    values = new Float32Array([0, 1]);
 
                     automationEventList.add(createSetValueCurveAutomationEvent(values, startTime, duration));
                 });
 
                 it('should return the value of the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(exponentialRampToValueAutomationEvent.value);
                 });
 
                 it('should return an interpolated value during the duration', () => {
-                    const time = startTime + (Math.random() * duration);
+                    const time = startTime + Math.random() * duration;
 
                     expect(automationEventList.getValue(time)).to.equal(interpolateValue(values, (time - startTime) / duration));
                 });
@@ -723,15 +669,12 @@ describe('AutomationEventList', () => {
                 it('should return the value of the last bin after the event', () => {
                     const time = startTime + duration + Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(values[ values.length - 1 ]);
+                    expect(automationEventList.getValue(time)).to.equal(values[values.length - 1]);
                 });
-
             });
-
         });
 
         describe('with a previous event of type linearRampToValue', () => {
-
             let linearRampToValueAutomationEvent;
             let offset;
 
@@ -745,7 +688,6 @@ describe('AutomationEventList', () => {
             });
 
             describe('with an event of type exponentialRampToValue', () => {
-
                 let value;
                 let endTime;
 
@@ -757,9 +699,12 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value before the endTime', () => {
-                    const time = offset + ((endTime - offset) * Math.random());
+                    const time = offset + (endTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(linearRampToValueAutomationEvent.value * ((value / linearRampToValueAutomationEvent.value) ** ((time - offset) / (endTime - offset))));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        linearRampToValueAutomationEvent.value *
+                            (value / linearRampToValueAutomationEvent.value) ** ((time - offset) / (endTime - offset))
+                    );
                 });
 
                 it('should return the value from the endTime onwards', () => {
@@ -767,11 +712,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type linearRampToValue', () => {
-
                 let value;
                 let endTime;
 
@@ -783,9 +726,12 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value before the endTime', () => {
-                    const time = offset + ((endTime - offset) * Math.random());
+                    const time = offset + (endTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(linearRampToValueAutomationEvent.value + ((time - offset) / (endTime - offset) * (value - linearRampToValueAutomationEvent.value)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        linearRampToValueAutomationEvent.value +
+                            ((time - offset) / (endTime - offset)) * (value - linearRampToValueAutomationEvent.value)
+                    );
                 });
 
                 it('should return the value from the endTime onwards', () => {
@@ -793,11 +739,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type setTarget', () => {
-
                 let startTime;
                 let target;
                 let timeConstant;
@@ -811,7 +755,7 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the value of the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(linearRampToValueAutomationEvent.value);
                 });
@@ -819,13 +763,13 @@ describe('AutomationEventList', () => {
                 it('should return the modified value from the startTime onwards', () => {
                     const time = startTime + Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(target + ((defaultValue - target) * Math.exp((startTime - time) / timeConstant)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        target + (defaultValue - target) * Math.exp((startTime - time) / timeConstant)
+                    );
                 });
-
             });
 
             describe('with an event of type setValue', () => {
-
                 let startTime;
                 let value;
 
@@ -837,7 +781,7 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the value of the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(linearRampToValueAutomationEvent.value);
                 });
@@ -847,11 +791,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type setValueCurve', () => {
-
                 let duration;
                 let startTime;
                 let values;
@@ -859,19 +801,19 @@ describe('AutomationEventList', () => {
                 beforeEach(() => {
                     duration = Math.random();
                     startTime = offset + Math.random();
-                    values = new Float32Array([ 0, 1 ]);
+                    values = new Float32Array([0, 1]);
 
                     automationEventList.add(createSetValueCurveAutomationEvent(values, startTime, duration));
                 });
 
                 it('should return the value of the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(linearRampToValueAutomationEvent.value);
                 });
 
                 it('should return an interpolated value during the duration', () => {
-                    const time = startTime + (Math.random() * duration);
+                    const time = startTime + Math.random() * duration;
 
                     expect(automationEventList.getValue(time)).to.equal(interpolateValue(values, (time - startTime) / duration));
                 });
@@ -879,15 +821,12 @@ describe('AutomationEventList', () => {
                 it('should return the value of the last bin after the event', () => {
                     const time = startTime + duration + Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(values[ values.length - 1 ]);
+                    expect(automationEventList.getValue(time)).to.equal(values[values.length - 1]);
                 });
-
             });
-
         });
 
         describe('with a previous event of type setTarget', () => {
-
             let offset;
             let setTargetAutomationEvent;
 
@@ -901,7 +840,6 @@ describe('AutomationEventList', () => {
             });
 
             describe('with an event of type exponentialRampToValue', () => {
-
                 let value;
                 let endTime;
 
@@ -913,9 +851,11 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value before the endTime', () => {
-                    const time = offset + ((endTime - offset) * Math.random());
+                    const time = offset + (endTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(defaultValue * ((value / defaultValue) ** ((time - offset) / (endTime - offset))));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        defaultValue * (value / defaultValue) ** ((time - offset) / (endTime - offset))
+                    );
                 });
 
                 it('should return the value from the endTime onwards', () => {
@@ -923,11 +863,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type linearRampToValue', () => {
-
                 let value;
                 let endTime;
 
@@ -939,9 +877,11 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value before the endTime', () => {
-                    const time = offset + ((endTime - offset) * Math.random());
+                    const time = offset + (endTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(defaultValue + ((time - offset) / (endTime - offset) * (value - defaultValue)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        defaultValue + ((time - offset) / (endTime - offset)) * (value - defaultValue)
+                    );
                 });
 
                 it('should return the value from the endTime onwards', () => {
@@ -949,11 +889,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type setTarget', () => {
-
                 let startTime;
                 let target;
                 let timeConstant;
@@ -967,21 +905,25 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value as defined by the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(setTargetAutomationEvent.target + ((defaultValue - setTargetAutomationEvent.target) * Math.exp((setTargetAutomationEvent.startTime - time) / setTargetAutomationEvent.timeConstant)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        setTargetAutomationEvent.target +
+                            (defaultValue - setTargetAutomationEvent.target) *
+                                Math.exp((setTargetAutomationEvent.startTime - time) / setTargetAutomationEvent.timeConstant)
+                    );
                 });
 
                 it('should return the modified value from the startTime onwards', () => {
                     const time = startTime + Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(target + ((defaultValue - target) * Math.exp((startTime - time) / timeConstant)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        target + (defaultValue - target) * Math.exp((startTime - time) / timeConstant)
+                    );
                 });
-
             });
 
             describe('with an event of type setValue', () => {
-
                 let startTime;
                 let value;
 
@@ -993,9 +935,13 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value as defined by the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(setTargetAutomationEvent.target + ((defaultValue - setTargetAutomationEvent.target) * Math.exp((setTargetAutomationEvent.startTime - time) / setTargetAutomationEvent.timeConstant)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        setTargetAutomationEvent.target +
+                            (defaultValue - setTargetAutomationEvent.target) *
+                                Math.exp((setTargetAutomationEvent.startTime - time) / setTargetAutomationEvent.timeConstant)
+                    );
                 });
 
                 it('should return the value from the startTime onwards', () => {
@@ -1003,11 +949,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type setValueCurve', () => {
-
                 let duration;
                 let startTime;
                 let values;
@@ -1015,20 +959,23 @@ describe('AutomationEventList', () => {
                 beforeEach(() => {
                     duration = Math.random();
                     startTime = offset + Math.random();
-                    values = new Float32Array([ 0, 1 ]);
+                    values = new Float32Array([0, 1]);
 
                     automationEventList.add(createSetValueCurveAutomationEvent(values, startTime, duration));
                 });
 
                 it('should return the modified value as defined by the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(setTargetAutomationEvent.target + ((defaultValue - setTargetAutomationEvent.target) * Math.exp((setTargetAutomationEvent.startTime - time) / setTargetAutomationEvent.timeConstant)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        setTargetAutomationEvent.target +
+                            (defaultValue - setTargetAutomationEvent.target) *
+                                Math.exp((setTargetAutomationEvent.startTime - time) / setTargetAutomationEvent.timeConstant)
+                    );
                 });
 
                 it('should return an interpolated value during the duration', () => {
-
-                    const time = startTime + (Math.random() * duration);
+                    const time = startTime + Math.random() * duration;
 
                     expect(automationEventList.getValue(time)).to.equal(interpolateValue(values, (time - startTime) / duration));
                 });
@@ -1036,15 +983,12 @@ describe('AutomationEventList', () => {
                 it('should return the value of the last bin after the event', () => {
                     const time = startTime + duration + Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(values[ values.length - 1 ]);
+                    expect(automationEventList.getValue(time)).to.equal(values[values.length - 1]);
                 });
-
             });
-
         });
 
         describe('with a previous event of type setValue', () => {
-
             let offset;
             let setValueAutomationEvent;
 
@@ -1058,7 +1002,6 @@ describe('AutomationEventList', () => {
             });
 
             describe('with an event of type exponentialRampToValue', () => {
-
                 let value;
                 let endTime;
 
@@ -1070,9 +1013,11 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value before the endTime', () => {
-                    const time = offset + ((endTime - offset) * Math.random());
+                    const time = offset + (endTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(setValueAutomationEvent.value * ((value / setValueAutomationEvent.value) ** ((time - offset) / (endTime - offset))));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        setValueAutomationEvent.value * (value / setValueAutomationEvent.value) ** ((time - offset) / (endTime - offset))
+                    );
                 });
 
                 it('should return the value from the endTime onwards', () => {
@@ -1080,11 +1025,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type linearRampToValue', () => {
-
                 let value;
                 let endTime;
 
@@ -1096,9 +1039,11 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value before the endTime', () => {
-                    const time = offset + ((endTime - offset) * Math.random());
+                    const time = offset + (endTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(setValueAutomationEvent.value + ((time - offset) / (endTime - offset) * (value - setValueAutomationEvent.value)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        setValueAutomationEvent.value + ((time - offset) / (endTime - offset)) * (value - setValueAutomationEvent.value)
+                    );
                 });
 
                 it('should return the value from the endTime onwards', () => {
@@ -1106,11 +1051,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type setTarget', () => {
-
                 let startTime;
                 let target;
                 let timeConstant;
@@ -1124,7 +1067,7 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the value of the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(setValueAutomationEvent.value);
                 });
@@ -1132,13 +1075,13 @@ describe('AutomationEventList', () => {
                 it('should return the modified value from the startTime onwards', () => {
                     const time = startTime + Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(target + ((defaultValue - target) * Math.exp((startTime - time) / timeConstant)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        target + (defaultValue - target) * Math.exp((startTime - time) / timeConstant)
+                    );
                 });
-
             });
 
             describe('with an event of type setValue', () => {
-
                 let startTime;
                 let value;
 
@@ -1150,7 +1093,7 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the value of the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(setValueAutomationEvent.value);
                 });
@@ -1160,11 +1103,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type setValueCurve', () => {
-
                 let duration;
                 let startTime;
                 let values;
@@ -1172,19 +1113,19 @@ describe('AutomationEventList', () => {
                 beforeEach(() => {
                     duration = Math.random();
                     startTime = offset + Math.random();
-                    values = new Float32Array([ 0, 1 ]);
+                    values = new Float32Array([0, 1]);
 
                     automationEventList.add(createSetValueCurveAutomationEvent(values, startTime, duration));
                 });
 
                 it('should return the value of the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(setValueAutomationEvent.value);
                 });
 
                 it('should return an interpolated value during the duration', () => {
-                    const time = startTime + (Math.random() * duration);
+                    const time = startTime + Math.random() * duration;
 
                     expect(automationEventList.getValue(time)).to.equal(interpolateValue(values, (time - startTime) / duration));
                 });
@@ -1192,15 +1133,12 @@ describe('AutomationEventList', () => {
                 it('should return the value of the last bin after the event', () => {
                     const time = startTime + duration + Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(values[ values.length - 1 ]);
+                    expect(automationEventList.getValue(time)).to.equal(values[values.length - 1]);
                 });
-
             });
-
         });
 
         describe('with a previous event of type setValueCurve', () => {
-
             let offset;
             let setValueCurveAutomationEvent;
 
@@ -1209,13 +1147,12 @@ describe('AutomationEventList', () => {
                 const startTime = Math.random();
 
                 offset = startTime + duration;
-                setValueCurveAutomationEvent = createSetValueCurveAutomationEvent(new Float32Array([ 0, 1 ]), startTime, duration);
+                setValueCurveAutomationEvent = createSetValueCurveAutomationEvent(new Float32Array([0, 1]), startTime, duration);
 
                 automationEventList.add(setValueCurveAutomationEvent);
             });
 
             describe('with an event of type exponentialRampToValue', () => {
-
                 let value;
                 let endTime;
 
@@ -1227,9 +1164,13 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value before the endTime', () => {
-                    const time = offset + ((endTime - offset) * Math.random());
+                    const time = offset + (endTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(setValueCurveAutomationEvent.values[ setValueCurveAutomationEvent.values.length - 1 ] * ((value / setValueCurveAutomationEvent.values[ setValueCurveAutomationEvent.values.length - 1 ]) ** ((time - offset) / (endTime - offset))));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        setValueCurveAutomationEvent.values[setValueCurveAutomationEvent.values.length - 1] *
+                            (value / setValueCurveAutomationEvent.values[setValueCurveAutomationEvent.values.length - 1]) **
+                                ((time - offset) / (endTime - offset))
+                    );
                 });
 
                 it('should return the value from the endTime onwards', () => {
@@ -1237,11 +1178,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type linearRampToValue', () => {
-
                 let value;
                 let endTime;
 
@@ -1253,9 +1192,13 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value before the endTime', () => {
-                    const time = offset + ((endTime - offset) * Math.random());
+                    const time = offset + (endTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(setValueCurveAutomationEvent.values[ setValueCurveAutomationEvent.values.length - 1 ] + ((time - offset) / (endTime - offset) * (value - setValueCurveAutomationEvent.values[ setValueCurveAutomationEvent.values.length - 1 ])));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        setValueCurveAutomationEvent.values[setValueCurveAutomationEvent.values.length - 1] +
+                            ((time - offset) / (endTime - offset)) *
+                                (value - setValueCurveAutomationEvent.values[setValueCurveAutomationEvent.values.length - 1])
+                    );
                 });
 
                 it('should return the value from the endTime onwards', () => {
@@ -1263,11 +1206,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type setTarget', () => {
-
                 let startTime;
                 let target;
                 let timeConstant;
@@ -1281,21 +1222,23 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the value of the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(setValueCurveAutomationEvent.values[ setValueCurveAutomationEvent.values.length - 1 ]);
+                    expect(automationEventList.getValue(time)).to.equal(
+                        setValueCurveAutomationEvent.values[setValueCurveAutomationEvent.values.length - 1]
+                    );
                 });
 
                 it('should return the modified value from the startTime onwards', () => {
                     const time = startTime + Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(target + ((defaultValue - target) * Math.exp((startTime - time) / timeConstant)));
+                    expect(automationEventList.getValue(time)).to.equal(
+                        target + (defaultValue - target) * Math.exp((startTime - time) / timeConstant)
+                    );
                 });
-
             });
 
             describe('with an event of type setValue', () => {
-
                 let startTime;
                 let value;
 
@@ -1307,9 +1250,11 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the value of the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(setValueCurveAutomationEvent.values[ setValueCurveAutomationEvent.values.length - 1 ]);
+                    expect(automationEventList.getValue(time)).to.equal(
+                        setValueCurveAutomationEvent.values[setValueCurveAutomationEvent.values.length - 1]
+                    );
                 });
 
                 it('should return the value from the startTime onwards', () => {
@@ -1317,11 +1262,9 @@ describe('AutomationEventList', () => {
 
                     expect(automationEventList.getValue(time)).to.equal(value);
                 });
-
             });
 
             describe('with an event of type setValueCurve', () => {
-
                 let duration;
                 let startTime;
                 let values;
@@ -1329,19 +1272,21 @@ describe('AutomationEventList', () => {
                 beforeEach(() => {
                     duration = Math.random();
                     startTime = offset + Math.random();
-                    values = new Float32Array([ 0, 1 ]);
+                    values = new Float32Array([0, 1]);
 
                     automationEventList.add(createSetValueCurveAutomationEvent(values, startTime, duration));
                 });
 
                 it('should return the value of the previous event before the startTime', () => {
-                    const time = offset + ((startTime - offset) * Math.random());
+                    const time = offset + (startTime - offset) * Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(setValueCurveAutomationEvent.values[ setValueCurveAutomationEvent.values.length - 1 ]);
+                    expect(automationEventList.getValue(time)).to.equal(
+                        setValueCurveAutomationEvent.values[setValueCurveAutomationEvent.values.length - 1]
+                    );
                 });
 
                 it('should return an interpolated value during the duration', () => {
-                    const time = startTime + (Math.random() * duration);
+                    const time = startTime + Math.random() * duration;
 
                     expect(automationEventList.getValue(time)).to.equal(interpolateValue(values, (time - startTime) / duration));
                 });
@@ -1349,13 +1294,9 @@ describe('AutomationEventList', () => {
                 it('should return the value of the last bin after the event', () => {
                     const time = startTime + duration + Math.random();
 
-                    expect(automationEventList.getValue(time)).to.equal(values[ values.length - 1 ]);
+                    expect(automationEventList.getValue(time)).to.equal(values[values.length - 1]);
                 });
-
             });
-
         });
-
     });
-
 });

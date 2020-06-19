@@ -8,10 +8,11 @@ import {
     ISetValueCurveAutomationEvent
 } from '../interfaces';
 
-export type TAutomationEvent = ICancelAndHoldAutomationEvent |
-    ICancelScheduledValuesAutomationEvent |
-    IExponentialRampToValueAutomationEvent |
-    ILinearRampToValueAutomationEvent |
-    ISetTargetAutomationEvent |
-    ISetValueAutomationEvent |
-    ISetValueCurveAutomationEvent;
+export type TAutomationEvent =
+    | ICancelAndHoldAutomationEvent
+    | ICancelScheduledValuesAutomationEvent
+    | IExponentialRampToValueAutomationEvent
+    | ILinearRampToValueAutomationEvent
+    | ISetTargetAutomationEvent
+    | ISetValueAutomationEvent
+    | ISetValueCurveAutomationEvent;

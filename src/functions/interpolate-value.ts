@@ -6,5 +6,5 @@ export const interpolateValue = (values: Float32Array, theoreticIndex: number) =
         return values[lowerIndex];
     }
 
-    return ((1 - (theoreticIndex - lowerIndex)) * values[lowerIndex]) + ((1 - (upperIndex - theoreticIndex)) * values[upperIndex]);
+    return (1 - (theoreticIndex - lowerIndex)) * values[lowerIndex] + (1 - (upperIndex - theoreticIndex)) * values[upperIndex];
 };

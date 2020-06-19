@@ -1,7 +1,6 @@
 import { createSetTargetAutomationEvent } from '../../../src/functions/create-set-target-automation-event';
 
 describe('createSetTargetAutomationEvent()', () => {
-
     it('should return an object which implements the ISetTargetAutomationEvent interface', () => {
         const setTargetAtTimeAutomationEvent = createSetTargetAutomationEvent(2, 1, 3);
 
@@ -28,5 +27,4 @@ describe('createSetTargetAutomationEvent()', () => {
 
         expect(setTargetAtTimeAutomationEvent.timeConstant).to.equal(3);
     });
-
 });

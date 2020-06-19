@@ -1,7 +1,6 @@
 import { createSetValueAutomationEvent } from '../../../src/functions/create-set-value-automation-event';
 
 describe('createSetValueAutomationEvent()', () => {
-
     it('should return an object which implements the ISetValueAutomationEvent interface', () => {
         const setValueAtTimeAutomationEvent = createSetValueAutomationEvent(2, 1);
 
@@ -21,5 +20,4 @@ describe('createSetValueAutomationEvent()', () => {
 
         expect(setValueAtTimeAutomationEvent.value).to.equal(2);
     });
-
 });

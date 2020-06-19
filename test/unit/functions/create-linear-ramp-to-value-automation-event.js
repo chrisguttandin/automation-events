@@ -1,7 +1,6 @@
 import { createLinearRampToValueAutomationEvent } from '../../../src/functions/create-linear-ramp-to-value-automation-event';
 
 describe('createLinearRampToValueAutomationEvent()', () => {
-
     it('should return an object which implements the ILinearRampToValueAutomationEvent interface', () => {
         const linearRampToValueAutomationEvent = createLinearRampToValueAutomationEvent(2, 1);
 
@@ -21,5 +20,4 @@ describe('createLinearRampToValueAutomationEvent()', () => {
 
         expect(linearRampToValueAutomationEvent.value).to.equal(2);
     });
-
 });

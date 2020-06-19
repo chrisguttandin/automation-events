@@ -6,8 +6,9 @@ import {
     ISetValueCurveAutomationEvent
 } from '../interfaces';
 
-export type TPersistentAutomationEvent = IExtendedExponentialRampToValueAutomationEvent |
-    IExtendedLinearRampToValueAutomationEvent |
-    ISetTargetAutomationEvent |
-    ISetValueAutomationEvent |
-    ISetValueCurveAutomationEvent;
+export type TPersistentAutomationEvent =
+    | IExtendedExponentialRampToValueAutomationEvent
+    | IExtendedLinearRampToValueAutomationEvent
+    | ISetTargetAutomationEvent
+    | ISetValueAutomationEvent
+    | ISetValueCurveAutomationEvent;

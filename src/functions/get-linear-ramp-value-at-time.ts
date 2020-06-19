@@ -6,5 +6,5 @@ export const getLinearRampValueAtTime = (
     valueAtStartTime: number,
     { endTime, value }: ILinearRampToValueAutomationEvent
 ) => {
-    return valueAtStartTime + ((time - startTime) / (endTime - startTime) * (value - valueAtStartTime));
+    return valueAtStartTime + ((time - startTime) / (endTime - startTime)) * (value - valueAtStartTime);
 };

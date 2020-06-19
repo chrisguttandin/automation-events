@@ -11,20 +11,20 @@ export const getEndTimeAndValueOfPreviousAutomationEvent = (
     currentAutomationEvent: TPersistentAutomationEvent,
     nextAutomationEvent: IExtendedExponentialRampToValueAutomationEvent | IExtendedLinearRampToValueAutomationEvent,
     defaultValue: number
-): [ number, number ] => {
-    return (currentAutomationEvent === undefined)
-        ? [ nextAutomationEvent.insertTime, defaultValue ]
-        : (isAnyRampToValueAutomationEvent(currentAutomationEvent))
-            ? [ currentAutomationEvent.endTime, currentAutomationEvent.value ]
-            : (isSetValueAutomationEvent(currentAutomationEvent))
-                ? [ currentAutomationEvent.startTime, currentAutomationEvent.value ]
-                : (isSetValueCurveAutomationEvent(currentAutomationEvent))
-                    ? [
-                        currentAutomationEvent.startTime + currentAutomationEvent.duration,
-                        currentAutomationEvent.values[ currentAutomationEvent.values.length - 1 ]
-                    ]
-                    : [
-                        currentAutomationEvent.startTime,
-                        getValueOfAutomationEventAtIndexAtTime(automationEvents, index - 1, currentAutomationEvent.startTime, defaultValue)
-                    ];
+): [number, number] => {
+    return currentAutomationEvent === undefined
+        ? [nextAutomationEvent.insertTime, defaultValue]
+        : isAnyRampToValueAutomationEvent(currentAutomationEvent)
+        ? [currentAutomationEvent.endTime, currentAutomationEvent.value]
+        : isSetValueAutomationEvent(currentAutomationEvent)
+        ? [currentAutomationEvent.startTime, currentAutomationEvent.value]
+        : isSetValueCurveAutomationEvent(currentAutomationEvent)
+        ? [
+              currentAutomationEvent.startTime + currentAutomationEvent.duration,
+              currentAutomationEvent.values[currentAutomationEvent.values.length - 1]
+          ]
+        : [
+              currentAutomationEvent.startTime,
+              getValueOfAutomationEventAtIndexAtTime(automationEvents, index - 1, currentAutomationEvent.startTime, defaultValue)
+          ];
 };

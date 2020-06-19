@@ -12,15 +12,15 @@ export const getValueOfAutomationEventAtIndexAtTime = (
 ): number => {
     const automationEvent = automationEvents[index];
 
-    return (automationEvent === undefined)
+    return automationEvent === undefined
         ? defaultValue
-        : (isAnyRampToValueAutomationEvent(automationEvent) || isSetValueAutomationEvent(automationEvent))
-            ? automationEvent.value
-            : (isSetValueCurveAutomationEvent(automationEvent))
-                ? automationEvent.values[ automationEvent.values.length - 1 ]
-                : getTargetValueAtTime(
-                    time,
-                    getValueOfAutomationEventAtIndexAtTime(automationEvents, index - 1, automationEvent.startTime, defaultValue),
-                    automationEvent
-                );
+        : isAnyRampToValueAutomationEvent(automationEvent) || isSetValueAutomationEvent(automationEvent)
+        ? automationEvent.value
+        : isSetValueCurveAutomationEvent(automationEvent)
+        ? automationEvent.values[automationEvent.values.length - 1]
+        : getTargetValueAtTime(
+              time,
+              getValueOfAutomationEventAtIndexAtTime(automationEvents, index - 1, automationEvent.startTime, defaultValue),
+              automationEvent
+          );
 };

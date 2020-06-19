@@ -1,5 +1,4 @@
 export interface ISetTargetAutomationEvent {
-
     readonly startTime: number;
 
     readonly target: number;
@@ -7,5 +6,4 @@ export interface ISetTargetAutomationEvent {
     readonly timeConstant: number;
 
     readonly type: 'setTarget';
-
 }

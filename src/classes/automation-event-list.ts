@@ -1,6 +1,4 @@
-import {
-    createExtendedExponentialRampToValueAutomationEvent
-} from '../functions/create-extended-exponential-ramp-to-value-automation-event';
+import { createExtendedExponentialRampToValueAutomationEvent } from '../functions/create-extended-exponential-ramp-to-value-automation-event';
 import { createExtendedLinearRampToValueAutomationEvent } from '../functions/create-extended-linear-ramp-to-value-automation-event';
 import { createSetValueAutomationEvent } from '../functions/create-set-value-automation-event';
 import { createSetValueCurveAutomationEvent } from '../functions/create-set-value-curve-automation-event';
@@ -22,29 +20,27 @@ import { isSetValueCurveAutomationEvent } from '../guards/set-value-curve-automa
 import { TAutomationEvent, TPersistentAutomationEvent } from '../types';
 
 export class AutomationEventList {
-
     private _automationEvents: TPersistentAutomationEvent[];
 
     private _currenTime: number;
 
     private _defaultValue: number;
 
-    constructor (defaultValue: number) {
-        this._automationEvents = [ ];
+    constructor(defaultValue: number) {
+        this._automationEvents = [];
         this._currenTime = 0;
         this._defaultValue = defaultValue;
     }
 
-    public [ Symbol.iterator ] (): Iterator<TPersistentAutomationEvent> {
+    public [Symbol.iterator](): Iterator<TPersistentAutomationEvent> {
         return this._automationEvents[Symbol.iterator]();
     }
 
-    public add (automationEvent: TAutomationEvent): boolean {
+    public add(automationEvent: TAutomationEvent): boolean {
         const eventTime = getEventTime(automationEvent);
 
         if (isCancelAndHoldAutomationEvent(automationEvent) || isCancelScheduledValuesAutomationEvent(automationEvent)) {
-            const index = this._automationEvents
-                .findIndex((currentAutomationEvent) => (getEventTime(currentAutomationEvent) >= eventTime));
+            const index = this._automationEvents.findIndex((currentAutomationEvent) => getEventTime(currentAutomationEvent) >= eventTime);
             const removedAutomationEvent = this._automationEvents[index];
 
             if (index !== -1) {
@@ -63,9 +59,9 @@ export class AutomationEventList {
                         ? lastAutomationEvent.startTime + lastAutomationEvent.duration
                         : getEventTime(lastAutomationEvent);
                     const startValue = isSetValueCurveAutomationEvent(lastAutomationEvent)
-                        ? lastAutomationEvent.values[ lastAutomationEvent.values.length - 1 ]
+                        ? lastAutomationEvent.values[lastAutomationEvent.values.length - 1]
                         : lastAutomationEvent.value;
-                    const value = (isExponentialRampToValueAutomationEvent(removedAutomationEvent))
+                    const value = isExponentialRampToValueAutomationEvent(removedAutomationEvent)
                         ? getExponentialRampValueAtTime(eventTime, startTime, startValue, removedAutomationEvent)
                         : getLinearRampValueAtTime(eventTime, startTime, startValue, removedAutomationEvent);
                     const truncatedAutomationEvent = isExponentialRampToValueAutomationEvent(removedAutomationEvent)
@@ -79,41 +75,45 @@ export class AutomationEventList {
                     this._automationEvents.push(createSetValueAutomationEvent(this.getValue(eventTime), eventTime));
                 }
 
-                if (lastAutomationEvent !== undefined
-                        && isSetValueCurveAutomationEvent(lastAutomationEvent)
-                        && lastAutomationEvent.startTime + lastAutomationEvent.duration > eventTime) {
+                if (
+                    lastAutomationEvent !== undefined &&
+                    isSetValueCurveAutomationEvent(lastAutomationEvent) &&
+                    lastAutomationEvent.startTime + lastAutomationEvent.duration > eventTime
+                ) {
                     this._automationEvents[this._automationEvents.length - 1] = createSetValueCurveAutomationEvent(
-                        new Float32Array([ 6, 7 ]),
+                        new Float32Array([6, 7]),
                         lastAutomationEvent.startTime,
                         eventTime - lastAutomationEvent.startTime
                     );
                 }
             }
         } else {
-            const index = this._automationEvents
-                .findIndex((currentAutomationEvent) => (getEventTime(currentAutomationEvent) > eventTime));
+            const index = this._automationEvents.findIndex((currentAutomationEvent) => getEventTime(currentAutomationEvent) > eventTime);
 
-            const previousAutomationEvent = (index === -1)
-                ? this._automationEvents[ this._automationEvents.length - 1 ]
-                : this._automationEvents[ index - 1 ];
+            const previousAutomationEvent =
+                index === -1 ? this._automationEvents[this._automationEvents.length - 1] : this._automationEvents[index - 1];
 
-            if (previousAutomationEvent !== undefined
-                    && isSetValueCurveAutomationEvent(previousAutomationEvent)
-                    && getEventTime(previousAutomationEvent) + previousAutomationEvent.duration > eventTime) {
+            if (
+                previousAutomationEvent !== undefined &&
+                isSetValueCurveAutomationEvent(previousAutomationEvent) &&
+                getEventTime(previousAutomationEvent) + previousAutomationEvent.duration > eventTime
+            ) {
                 return false;
             }
 
             const persistentAutomationEvent = isExponentialRampToValueAutomationEvent(automationEvent)
                 ? createExtendedExponentialRampToValueAutomationEvent(automationEvent.value, automationEvent.endTime, this._currenTime)
                 : isLinearRampToValueAutomationEvent(automationEvent)
-                    ? createExtendedLinearRampToValueAutomationEvent(automationEvent.value, eventTime, this._currenTime)
-                    : automationEvent;
+                ? createExtendedLinearRampToValueAutomationEvent(automationEvent.value, eventTime, this._currenTime)
+                : automationEvent;
 
             if (index === -1) {
                 this._automationEvents.push(persistentAutomationEvent);
             } else {
-                if (isSetValueCurveAutomationEvent(automationEvent)
-                        && eventTime + automationEvent.duration > getEventTime(this._automationEvents[index])) {
+                if (
+                    isSetValueCurveAutomationEvent(automationEvent) &&
+                    eventTime + automationEvent.duration > getEventTime(this._automationEvents[index])
+                ) {
                     return false;
                 }
 
@@ -124,48 +124,48 @@ export class AutomationEventList {
         return true;
     }
 
-    public flush (time: number): void {
-        const index = this._automationEvents
-            .findIndex((currentAutomationEvent) => (getEventTime(currentAutomationEvent) > time));
+    public flush(time: number): void {
+        const index = this._automationEvents.findIndex((currentAutomationEvent) => getEventTime(currentAutomationEvent) > time);
 
         if (index > 1) {
             const remainingAutomationEvents = this._automationEvents.slice(index - 1);
             const firstRemainingAutomationEvent = remainingAutomationEvents[0];
 
             if (isSetTargetAutomationEvent(firstRemainingAutomationEvent)) {
-                remainingAutomationEvents.unshift(createSetValueAutomationEvent(
-                    getValueOfAutomationEventAtIndexAtTime(
-                        this._automationEvents,
-                        index - 2,
-                        firstRemainingAutomationEvent.startTime,
-                        this._defaultValue
-                    ),
-                    firstRemainingAutomationEvent.startTime
-                ));
+                remainingAutomationEvents.unshift(
+                    createSetValueAutomationEvent(
+                        getValueOfAutomationEventAtIndexAtTime(
+                            this._automationEvents,
+                            index - 2,
+                            firstRemainingAutomationEvent.startTime,
+                            this._defaultValue
+                        ),
+                        firstRemainingAutomationEvent.startTime
+                    )
+                );
             }
 
             this._automationEvents = remainingAutomationEvents;
         }
     }
 
-    public getValue (time: number): number {
+    public getValue(time: number): number {
         if (this._automationEvents.length === 0) {
             return this._defaultValue;
         }
 
         const lastAutomationEvent = this._automationEvents[this._automationEvents.length - 1];
-        const index = this._automationEvents
-            .findIndex((automationEvent) => (getEventTime(automationEvent) > time));
+        const index = this._automationEvents.findIndex((automationEvent) => getEventTime(automationEvent) > time);
         const nextAutomationEvent = this._automationEvents[index];
-        const currentAutomationEvent = (getEventTime(lastAutomationEvent) <= time)
-            ? lastAutomationEvent
-            : this._automationEvents[index - 1];
+        const currentAutomationEvent = getEventTime(lastAutomationEvent) <= time ? lastAutomationEvent : this._automationEvents[index - 1];
 
-        if (currentAutomationEvent !== undefined
-                && isSetTargetAutomationEvent(currentAutomationEvent)
-                && (nextAutomationEvent === undefined
-                    || !isAnyRampToValueAutomationEvent(nextAutomationEvent)
-                    || nextAutomationEvent.insertTime > time)) {
+        if (
+            currentAutomationEvent !== undefined &&
+            isSetTargetAutomationEvent(currentAutomationEvent) &&
+            (nextAutomationEvent === undefined ||
+                !isAnyRampToValueAutomationEvent(nextAutomationEvent) ||
+                nextAutomationEvent.insertTime > time)
+        ) {
             return getTargetValueAtTime(
                 time,
                 getValueOfAutomationEventAtIndexAtTime(
@@ -178,34 +178,38 @@ export class AutomationEventList {
             );
         }
 
-        if (currentAutomationEvent !== undefined
-                && isSetValueAutomationEvent(currentAutomationEvent)
-                && (nextAutomationEvent === undefined
-                    || !isAnyRampToValueAutomationEvent(nextAutomationEvent))) {
+        if (
+            currentAutomationEvent !== undefined &&
+            isSetValueAutomationEvent(currentAutomationEvent) &&
+            (nextAutomationEvent === undefined || !isAnyRampToValueAutomationEvent(nextAutomationEvent))
+        ) {
             return currentAutomationEvent.value;
         }
 
-        if (currentAutomationEvent !== undefined
-                && isSetValueCurveAutomationEvent(currentAutomationEvent)
-                && (nextAutomationEvent === undefined
-                    || !isAnyRampToValueAutomationEvent(nextAutomationEvent)
-                    || (currentAutomationEvent.startTime + currentAutomationEvent.duration) > time)) {
-            if (time < (currentAutomationEvent.startTime + currentAutomationEvent.duration)) {
+        if (
+            currentAutomationEvent !== undefined &&
+            isSetValueCurveAutomationEvent(currentAutomationEvent) &&
+            (nextAutomationEvent === undefined ||
+                !isAnyRampToValueAutomationEvent(nextAutomationEvent) ||
+                currentAutomationEvent.startTime + currentAutomationEvent.duration > time)
+        ) {
+            if (time < currentAutomationEvent.startTime + currentAutomationEvent.duration) {
                 return getValueCurveValueAtTime(time, currentAutomationEvent);
             }
 
-            return currentAutomationEvent.values[ currentAutomationEvent.values.length - 1 ];
+            return currentAutomationEvent.values[currentAutomationEvent.values.length - 1];
         }
 
-        if (currentAutomationEvent !== undefined
-                && isAnyRampToValueAutomationEvent(currentAutomationEvent)
-                && (nextAutomationEvent === undefined
-                    || !isAnyRampToValueAutomationEvent(nextAutomationEvent))) {
+        if (
+            currentAutomationEvent !== undefined &&
+            isAnyRampToValueAutomationEvent(currentAutomationEvent) &&
+            (nextAutomationEvent === undefined || !isAnyRampToValueAutomationEvent(nextAutomationEvent))
+        ) {
             return currentAutomationEvent.value;
         }
 
         if (nextAutomationEvent !== undefined && isExponentialRampToValueAutomationEvent(nextAutomationEvent)) {
-            const [ startTime, value ] = getEndTimeAndValueOfPreviousAutomationEvent(
+            const [startTime, value] = getEndTimeAndValueOfPreviousAutomationEvent(
                 this._automationEvents,
                 index - 1,
                 currentAutomationEvent,
@@ -217,7 +221,7 @@ export class AutomationEventList {
         }
 
         if (nextAutomationEvent !== undefined && isLinearRampToValueAutomationEvent(nextAutomationEvent)) {
-            const [ startTime, value ] = getEndTimeAndValueOfPreviousAutomationEvent(
+            const [startTime, value] = getEndTimeAndValueOfPreviousAutomationEvent(
                 this._automationEvents,
                 index - 1,
                 currentAutomationEvent,
@@ -230,5 +234,4 @@ export class AutomationEventList {
 
         return this._defaultValue;
     }
-
 }

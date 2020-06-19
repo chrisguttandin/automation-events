@@ -1,5 +1,4 @@
 export interface ISetValueCurveAutomationEvent {
-
     readonly duration: number;
 
     readonly startTime: number;
@@ -7,5 +6,4 @@ export interface ISetValueCurveAutomationEvent {
     readonly type: 'setValueCurve';
 
     readonly values: Float32Array;
-
 }

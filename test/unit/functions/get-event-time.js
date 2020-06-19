@@ -8,9 +8,7 @@ import { createSetValueCurveAutomationEvent } from '../../../src/functions/creat
 import { getEventTime } from '../../../src/functions/get-event-time';
 
 describe('getEventTime()', () => {
-
     describe('with an event of type cancelAndHold', () => {
-
         let automationEvent;
 
         beforeEach(() => {
@@ -20,11 +18,9 @@ describe('getEventTime()', () => {
         it('should return the cancelTime', () => {
             expect(getEventTime(automationEvent)).to.equal(2);
         });
-
     });
 
     describe('with an event of type cancelScheduledValues', () => {
-
         let automationEvent;
 
         beforeEach(() => {
@@ -34,11 +30,9 @@ describe('getEventTime()', () => {
         it('should return the cancelTime', () => {
             expect(getEventTime(automationEvent)).to.equal(11);
         });
-
     });
 
     describe('with an event of type exponentialRampToValue', () => {
-
         let automationEvent;
 
         beforeEach(() => {
@@ -48,11 +42,9 @@ describe('getEventTime()', () => {
         it('should return the endTime', () => {
             expect(getEventTime(automationEvent)).to.equal(12);
         });
-
     });
 
     describe('with an event of type linearRampToValue', () => {
-
         let automationEvent;
 
         beforeEach(() => {
@@ -62,11 +54,9 @@ describe('getEventTime()', () => {
         it('should return the endTime', () => {
             expect(getEventTime(automationEvent)).to.equal(12);
         });
-
     });
 
     describe('with an event of type setTarget', () => {
-
         let automationEvent;
 
         beforeEach(() => {
@@ -76,11 +66,9 @@ describe('getEventTime()', () => {
         it('should return the startTime', () => {
             expect(getEventTime(automationEvent)).to.equal(12);
         });
-
     });
 
     describe('with an event of type setValue', () => {
-
         let automationEvent;
 
         beforeEach(() => {
@@ -90,21 +78,17 @@ describe('getEventTime()', () => {
         it('should return the startTime', () => {
             expect(getEventTime(automationEvent)).to.equal(12);
         });
-
     });
 
     describe('with an event of type setValueCurve', () => {
-
         let automationEvent;
 
         beforeEach(() => {
-            automationEvent = createSetValueCurveAutomationEvent(new Float32Array([ 5, 4, 3 ]), 12, 4);
+            automationEvent = createSetValueCurveAutomationEvent(new Float32Array([5, 4, 3]), 12, 4);
         });
 
         it('should return the startTime', () => {
             expect(getEventTime(automationEvent)).to.equal(12);
         });
-
     });
-
 });

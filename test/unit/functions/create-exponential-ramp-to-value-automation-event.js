@@ -1,7 +1,6 @@
 import { createExponentialRampToValueAutomationEvent } from '../../../src/functions/create-exponential-ramp-to-value-automation-event';
 
 describe('createExponentialRampToValueAutomationEvent()', () => {
-
     it('should return an object which implements the IExponentialRampToValueAutomationEvent interface', () => {
         const exponentialRampToValueAutomationEvent = createExponentialRampToValueAutomationEvent(2, 1);
 
@@ -21,5 +20,4 @@ describe('createExponentialRampToValueAutomationEvent()', () => {
 
         expect(exponentialRampToValueAutomationEvent.value).to.equal(2);
     });
-
 });

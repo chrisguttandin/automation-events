@@ -1,7 +1,6 @@
 import { createCancelAndHoldAutomationEvent } from '../../../src/functions/create-cancel-and-hold-automation-event';
 
 describe('createCancelAndHoldAutomationEvent()', () => {
-
     it('should return an object which implements the ICancelAndHoldAutomationEvent interface', () => {
         const cancelAndHoldAutomationEvent = createCancelAndHoldAutomationEvent(2);
 
@@ -14,5 +13,4 @@ describe('createCancelAndHoldAutomationEvent()', () => {
 
         expect(cancelAndHoldAutomationEvent.cancelTime).to.equal(2);
     });
-
 });

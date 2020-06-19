@@ -1,11 +1,10 @@
 import { createSetValueCurveAutomationEvent } from '../../../src/functions/create-set-value-curve-automation-event';
 
 describe('createSetValueCurveAutomationEvent()', () => {
-
     let values;
 
     beforeEach(() => {
-        values = new Float32Array([ 1, 2, 3 ]);
+        values = new Float32Array([1, 2, 3]);
     });
 
     it('should return an object which implements the ISetValueCurveAutomationEvent interface', () => {
@@ -34,5 +33,4 @@ describe('createSetValueCurveAutomationEvent()', () => {
 
         expect(setValueCurveAtTimeAutomationEvent.values).to.equal(values);
     });
-
 });
