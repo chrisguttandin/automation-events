@@ -40,7 +40,13 @@ export class AutomationEventList {
         const eventTime = getEventTime(automationEvent);
 
         if (isCancelAndHoldAutomationEvent(automationEvent) || isCancelScheduledValuesAutomationEvent(automationEvent)) {
-            const index = this._automationEvents.findIndex((currentAutomationEvent) => getEventTime(currentAutomationEvent) >= eventTime);
+            const index = this._automationEvents.findIndex((currentAutomationEvent) => {
+                if (isCancelScheduledValuesAutomationEvent(automationEvent) && isSetValueCurveAutomationEvent(currentAutomationEvent)) {
+                    return currentAutomationEvent.startTime + currentAutomationEvent.duration >= eventTime;
+                }
+
+                return getEventTime(currentAutomationEvent) >= eventTime;
+            });
             const removedAutomationEvent = this._automationEvents[index];
 
             if (index !== -1) {

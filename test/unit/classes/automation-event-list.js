@@ -115,6 +115,18 @@ describe('AutomationEventList', () => {
 
                 expect(Array.from(automationEventList)).to.deep.equal([{ startTime: 10, type: 'setValue', value: 0 }]);
             });
+
+            describe('with an event of type setValueCurve with a startTime before cancelTime', () => {
+                beforeEach(() => {
+                    automationEventList.add(createSetValueCurveAutomationEvent(new Float32Array([6, 7, 8]), 10, 2));
+                });
+
+                it('should remove the setValueCurve automation event', () => {
+                    expect(automationEventList.add(createCancelScheduledValuesAutomationEvent(11))).to.be.true;
+
+                    expect(Array.from(automationEventList)).to.deep.equal([{ startTime: 10, type: 'setValue', value: 0 }]);
+                });
+            });
         });
 
         describe('with an event of type exponentialRampToValue', () => {
