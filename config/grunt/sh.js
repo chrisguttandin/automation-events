@@ -22,7 +22,7 @@ module.exports = (grunt) => {
             cmd: `karma start config/karma/config-unit.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
         },
         'test-unit-node': {
-            cmd: 'mocha --bail --recursive --require config/mocha/config-unit.js test/unit'
+            cmd: 'mocha --bail --parallel --recursive --require config/mocha/config-unit.js test/unit'
         }
     };
 };
