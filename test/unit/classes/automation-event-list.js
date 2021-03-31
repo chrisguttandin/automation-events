@@ -82,8 +82,12 @@ describe('AutomationEventList', () => {
             });
 
             describe('with an event of type setTarget with a startTime before cancelTime', () => {
+                let target;
+
                 beforeEach(() => {
-                    automationEventList.add(createSetTargetAutomationEvent(0, 10, 1));
+                    target = Math.random();
+
+                    automationEventList.add(createSetTargetAutomationEvent(target, 10, 1));
                 });
 
                 it('should stop the setTarget automation by adding an event of type setValue', () => {
@@ -91,8 +95,8 @@ describe('AutomationEventList', () => {
 
                     expect(Array.from(automationEventList)).to.deep.equal([
                         { startTime: 10, type: 'setValue', value: 0 },
-                        { startTime: 10, target: 0, timeConstant: 1, type: 'setTarget' },
-                        { startTime: 11, type: 'setValue', value: defaultValue * Math.exp(-1) }
+                        { startTime: 10, target, timeConstant: 1, type: 'setTarget' },
+                        { startTime: 11, type: 'setValue', value: target - target * Math.exp(-1) }
                     ]);
                 });
             });
@@ -624,7 +628,7 @@ describe('AutomationEventList', () => {
                     const time = startTime + Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(
-                        target + (defaultValue - target) * Math.exp((startTime - time) / timeConstant)
+                        target + (exponentialRampToValueAutomationEvent.value - target) * Math.exp((startTime - time) / timeConstant)
                     );
                 });
             });
@@ -776,7 +780,7 @@ describe('AutomationEventList', () => {
                     const time = startTime + Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(
-                        target + (defaultValue - target) * Math.exp((startTime - time) / timeConstant)
+                        target + (linearRampToValueAutomationEvent.value - target) * Math.exp((startTime - time) / timeConstant)
                     );
                 });
             });
@@ -927,10 +931,14 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value from the startTime onwards', () => {
+                    const initialValue =
+                        setTargetAutomationEvent.target +
+                        (defaultValue - setTargetAutomationEvent.target) *
+                            Math.exp((setTargetAutomationEvent.startTime - startTime) / setTargetAutomationEvent.timeConstant);
                     const time = startTime + Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(
-                        target + (defaultValue - target) * Math.exp((startTime - time) / timeConstant)
+                        target + (initialValue - target) * Math.exp((startTime - time) / timeConstant)
                     );
                 });
             });
@@ -1088,7 +1096,7 @@ describe('AutomationEventList', () => {
                     const time = startTime + Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(
-                        target + (defaultValue - target) * Math.exp((startTime - time) / timeConstant)
+                        target + (setValueAutomationEvent.value - target) * Math.exp((startTime - time) / timeConstant)
                     );
                 });
             });
@@ -1242,10 +1250,11 @@ describe('AutomationEventList', () => {
                 });
 
                 it('should return the modified value from the startTime onwards', () => {
+                    const initialValue = setValueCurveAutomationEvent.values[setValueCurveAutomationEvent.values.length - 1];
                     const time = startTime + Math.random();
 
                     expect(automationEventList.getValue(time)).to.equal(
-                        target + (defaultValue - target) * Math.exp((startTime - time) / timeConstant)
+                        target + (initialValue - target) * Math.exp((startTime - time) / timeConstant)
                     );
                 });
             });

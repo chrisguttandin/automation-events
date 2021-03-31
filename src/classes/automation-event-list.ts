@@ -160,10 +160,10 @@ export class AutomationEventList {
             return this._defaultValue;
         }
 
-        const lastAutomationEvent = this._automationEvents[this._automationEvents.length - 1];
-        const index = this._automationEvents.findIndex((automationEvent) => getEventTime(automationEvent) > time);
-        const nextAutomationEvent = this._automationEvents[index];
-        const currentAutomationEvent = getEventTime(lastAutomationEvent) <= time ? lastAutomationEvent : this._automationEvents[index - 1];
+        const indexOfNextEvent = this._automationEvents.findIndex((automationEvent) => getEventTime(automationEvent) > time);
+        const nextAutomationEvent = this._automationEvents[indexOfNextEvent];
+        const indexOfCurrentEvent = (indexOfNextEvent === -1 ? this._automationEvents.length : indexOfNextEvent) - 1;
+        const currentAutomationEvent = this._automationEvents[indexOfCurrentEvent];
 
         if (
             currentAutomationEvent !== undefined &&
@@ -176,7 +176,7 @@ export class AutomationEventList {
                 time,
                 getValueOfAutomationEventAtIndexAtTime(
                     this._automationEvents,
-                    index - 2,
+                    indexOfCurrentEvent - 1,
                     currentAutomationEvent.startTime,
                     this._defaultValue
                 ),
@@ -217,7 +217,7 @@ export class AutomationEventList {
         if (nextAutomationEvent !== undefined && isExponentialRampToValueAutomationEvent(nextAutomationEvent)) {
             const [startTime, value] = getEndTimeAndValueOfPreviousAutomationEvent(
                 this._automationEvents,
-                index - 1,
+                indexOfCurrentEvent,
                 currentAutomationEvent,
                 nextAutomationEvent,
                 this._defaultValue
@@ -229,7 +229,7 @@ export class AutomationEventList {
         if (nextAutomationEvent !== undefined && isLinearRampToValueAutomationEvent(nextAutomationEvent)) {
             const [startTime, value] = getEndTimeAndValueOfPreviousAutomationEvent(
                 this._automationEvents,
-                index - 1,
+                indexOfCurrentEvent,
                 currentAutomationEvent,
                 nextAutomationEvent,
                 this._defaultValue
