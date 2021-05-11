@@ -2,7 +2,6 @@
 
 **A module which provides an implementation of an automation event list.**
 
-[![tests](https://img.shields.io/travis/chrisguttandin/automation-events/master.svg?style=flat-square)](https://travis-ci.org/chrisguttandin/automation-events)
 [![dependencies](https://img.shields.io/david/chrisguttandin/automation-events.svg?style=flat-square)](https://www.npmjs.com/package/automation-events)
 [![version](https://img.shields.io/npm/v/automation-events.svg?style=flat-square)](https://www.npmjs.com/package/automation-events)
 
@@ -85,7 +84,6 @@ import { createLinearRampToValueAutomationEvent } from 'automation-events';
 
 createLinearRampToValueAutomationEvent(-1, 4);
 // { endTime: 4, type: 'linearRampToValue', value: -1 };
-
 ```
 
 #### createSetTargetAutomationEvent()
@@ -111,7 +109,7 @@ createSetValueAutomationEvent(1, 8);
 ```js
 import { createSetValueCurveAutomationEvent } from 'automation-events';
 
-const values = new Float32Array([ 1, 0, -1 ]);
+const values = new Float32Array([1, 0, -1]);
 
 createSetValueCurveAutomationEvent(values, 0, 5);
 // { duration: 5, startTime: 0, type: 'setValueCurve', values }
