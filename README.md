@@ -2,7 +2,7 @@
 
 **A module which provides an implementation of an automation event list.**
 
-[![dependencies](https://img.shields.io/david/chrisguttandin/automation-events.svg?style=flat-square)](https://www.npmjs.com/package/automation-events)
+[![dependencies](https://img.shields.io/david/chrisguttandin/automation-events.svg?style=flat-square)](https://github.com/chrisguttandin/automation-events/network/dependencies)
 [![version](https://img.shields.io/npm/v/automation-events.svg?style=flat-square)](https://www.npmjs.com/package/automation-events)
 
 This module provides an implementation of an automation event list to manage the internal state of an [AudioParam](https://webaudio.github.io/web-audio-api/#AudioParam) as defined by the [Web Audio API](https://webaudio.github.io/web-audio-api).
