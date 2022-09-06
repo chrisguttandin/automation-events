@@ -10,7 +10,7 @@
         }
     },
     "dependencies": {
-        "@babel/runtime": "^7.18.9",
+        "@babel/runtime": "^7.19.0",
         "tslib": "^2.4.0"
     },
     "description": "A module which provides an implementation of an automation event list.",
