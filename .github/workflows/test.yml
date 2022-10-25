@@ -24,7 +24,7 @@ jobs:
                     - node-version: 16.x
                       target: safari
                       type: unit
-                node-version: [12.x, 14.x, 16.x, 18.x]
+                node-version: [12.x, 14.x, 16.x, 18.x, 19.x]
                 target: [node]
                 type: [unit]
             max-parallel: 3
