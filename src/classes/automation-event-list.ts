@@ -57,16 +57,22 @@ export class AutomationEventList {
                 const lastAutomationEvent = this._automationEvents[this._automationEvents.length - 1];
 
                 if (removedAutomationEvent !== undefined && isAnyRampToValueAutomationEvent(removedAutomationEvent)) {
-                    if (isSetTargetAutomationEvent(lastAutomationEvent)) {
+                    if (lastAutomationEvent !== undefined && isSetTargetAutomationEvent(lastAutomationEvent)) {
                         throw new Error('The internal list is malformed.');
                     }
 
-                    const startTime = isSetValueCurveAutomationEvent(lastAutomationEvent)
-                        ? lastAutomationEvent.startTime + lastAutomationEvent.duration
-                        : getEventTime(lastAutomationEvent);
-                    const startValue = isSetValueCurveAutomationEvent(lastAutomationEvent)
-                        ? lastAutomationEvent.values[lastAutomationEvent.values.length - 1]
-                        : lastAutomationEvent.value;
+                    const startTime =
+                        lastAutomationEvent === undefined
+                            ? removedAutomationEvent.insertTime
+                            : isSetValueCurveAutomationEvent(lastAutomationEvent)
+                            ? lastAutomationEvent.startTime + lastAutomationEvent.duration
+                            : getEventTime(lastAutomationEvent);
+                    const startValue =
+                        lastAutomationEvent === undefined
+                            ? this._defaultValue
+                            : isSetValueCurveAutomationEvent(lastAutomationEvent)
+                            ? lastAutomationEvent.values[lastAutomationEvent.values.length - 1]
+                            : lastAutomationEvent.value;
                     const value = isExponentialRampToValueAutomationEvent(removedAutomationEvent)
                         ? getExponentialRampValueAtTime(eventTime, startTime, startValue, removedAutomationEvent)
                         : getLinearRampValueAtTime(eventTime, startTime, startValue, removedAutomationEvent);

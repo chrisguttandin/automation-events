@@ -6,6 +6,8 @@ import { createLinearRampToValueAutomationEvent } from '../../../src/functions/c
 import { createSetTargetAutomationEvent } from '../../../src/functions/create-set-target-automation-event';
 import { createSetValueAutomationEvent } from '../../../src/functions/create-set-value-automation-event';
 import { createSetValueCurveAutomationEvent } from '../../../src/functions/create-set-value-curve-automation-event';
+import { getExponentialRampValueAtTime } from '../../../src/functions/get-exponential-ramp-value-at-time';
+import { getLinearRampValueAtTime } from '../../../src/functions/get-linear-ramp-value-at-time';
 import { interpolateValue } from '../../../src/functions/interpolate-value';
 
 describe('AutomationEventList', () => {
@@ -37,34 +39,71 @@ describe('AutomationEventList', () => {
             });
 
             describe('with an event of type exponentialRampToValue with an endTime after cancelTime', () => {
-                beforeEach(() => {
-                    automationEventList.add(createExponentialRampToValueAutomationEvent(0.75, 11.5));
+                describe('without a previous event', () => {
+                    beforeEach(() => {
+                        automationEventList.add(createExponentialRampToValueAutomationEvent(0.75, 5));
+                    });
+
+                    it('should truncate the exponentialRampToValue automation by replacing it', () => {
+                        expect(automationEventList.add(createCancelAndHoldAutomationEvent(4))).to.be.true;
+
+                        const value = getExponentialRampValueAtTime(4, 0, defaultValue, { endTime: 5, value: 0.75 });
+
+                        expect(Array.from(automationEventList)[0].value).to.equal(value);
+                        expect(Array.from(automationEventList)).to.deep.equal([
+                            { endTime: 4, insertTime: 0, type: 'exponentialRampToValue', value }
+                        ]);
+                    });
                 });
 
-                it('should truncate the exponentialRampToValue automation by replacing it', () => {
-                    expect(automationEventList.add(createCancelAndHoldAutomationEvent(11))).to.be.true;
+                describe('with a previous event', () => {
+                    beforeEach(() => {
+                        automationEventList.add(createExponentialRampToValueAutomationEvent(0.75, 11.5));
+                    });
 
-                    expect(Array.from(automationEventList)).to.deep.equal([
-                        { startTime: 10, type: 'setValue', value: 0 },
-                        { endTime: 11, insertTime: 0, type: 'exponentialRampToValue', value: 0 }
-                    ]);
+                    it('should truncate the exponentialRampToValue automation by replacing it', () => {
+                        expect(automationEventList.add(createCancelAndHoldAutomationEvent(11))).to.be.true;
+
+                        expect(Array.from(automationEventList)).to.deep.equal([
+                            { startTime: 10, type: 'setValue', value: 0 },
+                            { endTime: 11, insertTime: 0, type: 'exponentialRampToValue', value: 0 }
+                        ]);
+                    });
                 });
             });
 
             describe('with an event of type linearRampToValue with an endTime after cancelTime', () => {
-                beforeEach(() => {
-                    automationEventList.add(createLinearRampToValueAutomationEvent(0.75, 11.5));
+                describe('without a previous event', () => {
+                    beforeEach(() => {
+                        automationEventList.add(createLinearRampToValueAutomationEvent(0.75, 5));
+                    });
+
+                    it('should truncate the linearRampToValue automation by replacing it', () => {
+                        expect(automationEventList.add(createCancelAndHoldAutomationEvent(4))).to.be.true;
+
+                        const value = getLinearRampValueAtTime(4, 0, defaultValue, { endTime: 5, value: 0.75 });
+
+                        expect(Array.from(automationEventList)[0].value).to.equal(value);
+                        expect(Array.from(automationEventList)).to.deep.equal([
+                            { endTime: 4, insertTime: 0, type: 'linearRampToValue', value }
+                        ]);
+                    });
                 });
 
-                it('should truncate the linearRampToValue automation by replacing it', () => {
-                    expect(automationEventList.add(createCancelAndHoldAutomationEvent(11))).to.be.true;
+                describe('with a previous event', () => {
+                    beforeEach(() => {
+                        automationEventList.add(createLinearRampToValueAutomationEvent(0.75, 11.5));
+                    });
 
-                    expect(Array.from(automationEventList)).to.deep.equal([
-                        { startTime: 10, type: 'setValue', value: 0 },
-                        { endTime: 11, insertTime: 0, type: 'linearRampToValue', value: 0.5 }
-                    ]);
+                    it('should truncate the linearRampToValue automation by replacing it', () => {
+                        expect(automationEventList.add(createCancelAndHoldAutomationEvent(11))).to.be.true;
+
+                        expect(Array.from(automationEventList)).to.deep.equal([
+                            { startTime: 10, type: 'setValue', value: 0 },
+                            { endTime: 11, insertTime: 0, type: 'linearRampToValue', value: 0.5 }
+                        ]);
+                    });
                 });
-                // });
             });
 
             describe('with an event of type setValueCurve with a startTime before cancelTime', () => {
