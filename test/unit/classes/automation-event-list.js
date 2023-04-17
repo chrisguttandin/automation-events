@@ -64,20 +64,56 @@ describe('AutomationEventList', () => {
                         { endTime: 11, insertTime: 0, type: 'linearRampToValue', value: 0.5 }
                     ]);
                 });
+                // });
             });
 
             describe('with an event of type setValueCurve with a startTime before cancelTime', () => {
-                beforeEach(() => {
-                    automationEventList.add(createSetValueCurveAutomationEvent(new Float32Array([6, 7, 8]), 10, 2));
+                describe('with a curve with three values', () => {
+                    beforeEach(() => {
+                        automationEventList.add(createSetValueCurveAutomationEvent(new Float32Array([6, 7, 8]), 10, 2));
+                    });
+
+                    it('should truncate the setValueCurve automation by replacing it with a sliced curve', () => {
+                        expect(automationEventList.add(createCancelAndHoldAutomationEvent(11))).to.be.true;
+
+                        expect(Array.from(automationEventList)).to.deep.equal([
+                            { startTime: 10, type: 'setValue', value: 0 },
+                            { duration: 1, startTime: 10, type: 'setValueCurve', values: new Float32Array([6, 7]) }
+                        ]);
+                    });
+
+                    it('should truncate the setValueCurve automation by replacing it with an interpolated curve', () => {
+                        expect(automationEventList.add(createCancelAndHoldAutomationEvent(11.5))).to.be.true;
+
+                        expect(Array.from(automationEventList)).to.deep.equal([
+                            { startTime: 10, type: 'setValue', value: 0 },
+                            { duration: 1.5, startTime: 10, type: 'setValueCurve', values: new Float32Array([6, 6.75, 7.5]) }
+                        ]);
+                    });
                 });
 
-                it('should truncate the setValueCurve automation by replacing it', () => {
-                    expect(automationEventList.add(createCancelAndHoldAutomationEvent(11))).to.be.true;
+                describe('with a curve with two values', () => {
+                    beforeEach(() => {
+                        automationEventList.add(createSetValueCurveAutomationEvent(new Float32Array([6, 8]), 10, 2));
+                    });
 
-                    expect(Array.from(automationEventList)).to.deep.equal([
-                        { startTime: 10, type: 'setValue', value: 0 },
-                        { duration: 1, startTime: 10, type: 'setValueCurve', values: new Float32Array([6, 7]) }
-                    ]);
+                    it('should truncate the setValueCurve automation by replacing it with a sliced curve', () => {
+                        expect(automationEventList.add(createCancelAndHoldAutomationEvent(11))).to.be.true;
+
+                        expect(Array.from(automationEventList)).to.deep.equal([
+                            { startTime: 10, type: 'setValue', value: 0 },
+                            { duration: 1, startTime: 10, type: 'setValueCurve', values: new Float32Array([6, 7]) }
+                        ]);
+                    });
+
+                    it('should truncate the setValueCurve automation by replacing it with an interpolated curve', () => {
+                        expect(automationEventList.add(createCancelAndHoldAutomationEvent(11.5))).to.be.true;
+
+                        expect(Array.from(automationEventList)).to.deep.equal([
+                            { startTime: 10, type: 'setValue', value: 0 },
+                            { duration: 1.5, startTime: 10, type: 'setValueCurve', values: new Float32Array([6, 7.5]) }
+                        ]);
+                    });
                 });
             });
 

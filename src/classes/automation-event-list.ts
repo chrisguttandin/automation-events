@@ -86,10 +86,24 @@ export class AutomationEventList {
                     isSetValueCurveAutomationEvent(lastAutomationEvent) &&
                     lastAutomationEvent.startTime + lastAutomationEvent.duration > eventTime
                 ) {
+                    const duration = eventTime - lastAutomationEvent.startTime;
+                    const ratio = (lastAutomationEvent.values.length - 1) / lastAutomationEvent.duration;
+                    const length = Math.max(2, 1 + Math.ceil(duration * ratio));
+                    const fraction = (duration / (length - 1)) * ratio;
+                    const values = lastAutomationEvent.values.slice(0, length);
+
+                    if (fraction < 1) {
+                        for (let i = 1; i < length; i += 1) {
+                            const factor = (fraction * i) % 1;
+
+                            values[i] = lastAutomationEvent.values[i - 1] * (1 - factor) + lastAutomationEvent.values[i] * factor;
+                        }
+                    }
+
                     this._automationEvents[this._automationEvents.length - 1] = createSetValueCurveAutomationEvent(
-                        new Float32Array([6, 7]),
+                        values,
                         lastAutomationEvent.startTime,
-                        eventTime - lastAutomationEvent.startTime
+                        duration
                     );
                 }
             }
