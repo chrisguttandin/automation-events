@@ -5,7 +5,7 @@ const filter = (predicate, ...tasks) => (predicate ? tasks : []);
 const isTarget = (...targets) => env.TARGET === undefined || targets.includes(env.TARGET);
 
 module.exports = {
-    build: ['sh:clean', 'sh:build-es2019', 'sh:build-es5', 'sh:build-node'],
+    build: ['sh:build'],
     lint: ['sh:lint-config', 'sh:lint-src', 'sh:lint-test'],
     test: [
         'build',
