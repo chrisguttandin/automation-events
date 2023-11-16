@@ -19,9 +19,6 @@ jobs:
                       target: chrome
                       type: unit
                     - node-version: 18.x
-                      target: firefox
-                      type: unit
-                    - node-version: 18.x
                       target: safari
                       type: unit
                 node-version: [16.x, 18.x, 19.x]
