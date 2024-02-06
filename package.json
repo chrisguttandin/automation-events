@@ -57,7 +57,7 @@
         "webpack": "^5.90.1"
     },
     "engines": {
-        "node": ">=16.1.0"
+        "node": ">=18.2.0"
     },
     "files": [
         "build/es2019/",
