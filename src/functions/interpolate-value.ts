@@ -1,4 +1,4 @@
-export const interpolateValue = (values: Float32Array, theoreticIndex: number) => {
+export const interpolateValue = (values: number[] | Float32Array, theoreticIndex: number) => {
     const lowerIndex = Math.floor(theoreticIndex);
     const upperIndex = Math.ceil(theoreticIndex);
 

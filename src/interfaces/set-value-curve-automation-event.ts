@@ -5,5 +5,5 @@ export interface ISetValueCurveAutomationEvent {
 
     readonly type: 'setValueCurve';
 
-    readonly values: Float32Array;
+    readonly values: number[] | Float32Array;
 }

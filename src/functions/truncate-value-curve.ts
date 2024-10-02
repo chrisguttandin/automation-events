@@ -1,9 +1,13 @@
 import { interpolateValue } from './interpolate-value';
 
-export const truncateValueCurve = (values: Float32Array, originalDuration: number, targetDuration: number): Float32Array => {
+export const truncateValueCurve = <Values extends number[] | Float32Array>(
+    values: Values,
+    originalDuration: number,
+    targetDuration: number
+): Values => {
     const length = values.length;
     const truncatedLength = Math.floor((targetDuration / originalDuration) * length) + 1;
-    const truncatedValues = new Float32Array(truncatedLength);
+    const truncatedValues = values instanceof Float32Array ? new Float32Array(truncatedLength) : values.slice(0, truncatedLength);
 
     for (let i = 0; i < truncatedLength; i += 1) {
         const time = (i / (truncatedLength - 1)) * targetDuration;
@@ -12,5 +16,5 @@ export const truncateValueCurve = (values: Float32Array, originalDuration: numbe
         truncatedValues[i] = interpolateValue(values, theoreticIndex);
     }
 
-    return truncatedValues;
+    return <Values>truncatedValues;
 };
