@@ -6,7 +6,6 @@ const isTarget = (...targets) => env.TARGET === undefined || targets.includes(en
 
 module.exports = {
     build: ['sh:build'],
-    lint: ['sh:lint-config', 'sh:lint-src', 'sh:lint-test'],
     test: [
         'build',
         ...filter(isTarget('chrome', 'firefox', 'safari'), 'sh:test-unit-browser'),
