@@ -1,15 +1,13 @@
-module.exports = (grunt) => {
-    const continuous = grunt.option('continuous') === true;
-
+module.exports = () => {
     return {
         'build': {
             cmd: 'npm run build'
         },
         'test-unit-browser': {
-            cmd: `karma start config/karma/config-unit.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
+            cmd: 'npm run test:unit-browser'
         },
         'test-unit-node': {
-            cmd: 'mocha --bail --parallel --recursive --require config/mocha/config-unit.js test/unit'
+            cmd: 'npm run test:unit-node'
         }
     };
 };
