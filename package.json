@@ -86,9 +86,9 @@
         "lint:test": "eslint --config config/eslint/test.json --ext .js --report-unused-disable-directives test/",
         "prepare": "husky",
         "prepublishOnly": "npm run build",
-        "test": "npm run lint && grunt test",
-        "test:unit-browser": "karma start config/karma/config-unit.js --single-run",
-        "test:unit-node": "mocha --bail --parallel --recursive --require config/mocha/config-unit.js test/unit"
+        "test": "npm run lint && npm run build && npm run test:unit-browser && npm run test:unit-node",
+        "test:unit-browser": "if [ \"$TYPE\" = \"\" -o \"$TYPE\" = \"unit\" ] && [ \"$TARGET\" = \"\" -o \"$TARGET\" = \"chrome\" -o \"$TARGET\" = \"firefox\" -o \"$TARGET\" = \"safari\" ]; then karma start config/karma/config-unit.js --single-run; fi",
+        "test:unit-node": "if [ \"$TYPE\" = \"\" -o \"$TYPE\" = \"unit\" ] && [ \"$TARGET\" = \"\" -o \"$TARGET\" = \"node\" ]; then mocha --bail --parallel --recursive --require config/mocha/config-unit.js test/unit; fi"
     },
     "types": "build/es2019/module.d.ts",
     "version": "7.1.8"
