@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { createExponentialRampToValueAutomationEvent } from '../../../src/functions/create-exponential-ramp-to-value-automation-event';
 
 describe('createExponentialRampToValueAutomationEvent()', () => {

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { createSetValueAutomationEvent } from '../../../src/functions/create-set-value-automation-event';
 
 describe('createSetValueAutomationEvent()', () => {

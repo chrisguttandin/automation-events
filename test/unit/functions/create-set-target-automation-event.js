@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { createSetTargetAutomationEvent } from '../../../src/functions/create-set-target-automation-event';
 
 describe('createSetTargetAutomationEvent()', () => {

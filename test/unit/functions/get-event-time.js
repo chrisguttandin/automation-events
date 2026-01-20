@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { createCancelAndHoldAutomationEvent } from '../../../src/functions/create-cancel-and-hold-automation-event';
 import { createCancelScheduledValuesAutomationEvent } from '../../../src/functions/create-cancel-scheduled-values-automation-event';
 import { createExponentialRampToValueAutomationEvent } from '../../../src/functions/create-exponential-ramp-to-value-automation-event';

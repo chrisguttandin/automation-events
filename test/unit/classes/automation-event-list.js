@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { AutomationEventList } from '../../../src/classes/automation-event-list';
 import { createCancelAndHoldAutomationEvent } from '../../../src/functions/create-cancel-and-hold-automation-event';
 import { createCancelScheduledValuesAutomationEvent } from '../../../src/functions/create-cancel-scheduled-values-automation-event';

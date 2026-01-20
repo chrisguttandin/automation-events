@@ -8,6 +8,7 @@ import {
     createSetValueAutomationEvent,
     createSetValueCurveAutomationEvent
 } from '../../src/module';
+import { describe, expect, it } from 'vitest';
 
 describe('automation-events', () => {
     describe('AutomationEventList', () => {

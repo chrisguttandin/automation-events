@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { createLinearRampToValueAutomationEvent } from '../../../src/functions/create-linear-ramp-to-value-automation-event';
 
 describe('createLinearRampToValueAutomationEvent()', () => {

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { createSetValueCurveAutomationEvent } from '../../../src/functions/create-set-value-curve-automation-event';
 
 describe('createSetValueCurveAutomationEvent()', () => {

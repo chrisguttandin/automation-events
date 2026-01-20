@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { createCancelScheduledValuesAutomationEvent } from '../../../src/functions/create-cancel-scheduled-values-automation-event';
 
 describe('createCancelScheduledValuesAutomationEvent()', () => {

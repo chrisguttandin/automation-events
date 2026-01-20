@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { createCancelAndHoldAutomationEvent } from '../../../src/functions/create-cancel-and-hold-automation-event';
 
 describe('createCancelAndHoldAutomationEvent()', () => {
