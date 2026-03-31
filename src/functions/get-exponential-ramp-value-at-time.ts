@@ -14,5 +14,5 @@ export const getExponentialRampValueAtTime = (
         return valueAtStartTime * (value / valueAtStartTime) ** ((time - startTime) / (endTime - startTime));
     }
 
-    return 0;
+    return time < endTime ? valueAtStartTime : value;
 };
