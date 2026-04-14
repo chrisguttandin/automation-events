@@ -9,6 +9,7 @@ import { getLinearRampValueAtTime } from '../functions/get-linear-ramp-value-at-
 import { getTargetValueAtTime } from '../functions/get-target-value-at-time';
 import { getValueCurveValueAtTime } from '../functions/get-value-curve-value-at-time';
 import { getValueOfAutomationEventAtIndexAtTime } from '../functions/get-value-of-automation-event-at-index-at-time';
+import { truncateValueCurve } from '../functions/truncate-value-curve';
 import { isAnyRampToValueAutomationEvent } from '../guards/any-ramp-to-value-automation-event';
 import { isCancelAndHoldAutomationEvent } from '../guards/cancel-and-hold-automation-event';
 import { isCancelScheduledValuesAutomationEvent } from '../guards/cancel-scheduled-values-automation-event';
@@ -65,14 +66,14 @@ export class AutomationEventList {
                         lastAutomationEvent === undefined
                             ? removedAutomationEvent.insertTime
                             : isSetValueCurveAutomationEvent(lastAutomationEvent)
-                            ? lastAutomationEvent.startTime + lastAutomationEvent.duration
-                            : getEventTime(lastAutomationEvent);
+                              ? lastAutomationEvent.startTime + lastAutomationEvent.duration
+                              : getEventTime(lastAutomationEvent);
                     const startValue =
                         lastAutomationEvent === undefined
                             ? this._defaultValue
                             : isSetValueCurveAutomationEvent(lastAutomationEvent)
-                            ? lastAutomationEvent.values[lastAutomationEvent.values.length - 1]
-                            : lastAutomationEvent.value;
+                              ? lastAutomationEvent.values[lastAutomationEvent.values.length - 1]
+                              : lastAutomationEvent.value;
                     const value = isExponentialRampToValueAutomationEvent(removedAutomationEvent)
                         ? getExponentialRampValueAtTime(eventTime, startTime, startValue, removedAutomationEvent)
                         : getLinearRampValueAtTime(eventTime, startTime, startValue, removedAutomationEvent);
@@ -93,21 +94,9 @@ export class AutomationEventList {
                     lastAutomationEvent.startTime + lastAutomationEvent.duration > eventTime
                 ) {
                     const duration = eventTime - lastAutomationEvent.startTime;
-                    const ratio = (lastAutomationEvent.values.length - 1) / lastAutomationEvent.duration;
-                    const length = Math.max(2, 1 + Math.ceil(duration * ratio));
-                    const fraction = (duration / (length - 1)) * ratio;
-                    const values = lastAutomationEvent.values.slice(0, length);
-
-                    if (fraction < 1) {
-                        for (let i = 1; i < length; i += 1) {
-                            const factor = (fraction * i) % 1;
-
-                            values[i] = lastAutomationEvent.values[i - 1] * (1 - factor) + lastAutomationEvent.values[i] * factor;
-                        }
-                    }
 
                     this._automationEvents[this._automationEvents.length - 1] = createSetValueCurveAutomationEvent(
-                        values,
+                        truncateValueCurve(lastAutomationEvent.values, lastAutomationEvent.duration, duration),
                         lastAutomationEvent.startTime,
                         duration
                     );
@@ -130,8 +119,8 @@ export class AutomationEventList {
             const persistentAutomationEvent = isExponentialRampToValueAutomationEvent(automationEvent)
                 ? createExtendedExponentialRampToValueAutomationEvent(automationEvent.value, automationEvent.endTime, this._currenTime)
                 : isLinearRampToValueAutomationEvent(automationEvent)
-                ? createExtendedLinearRampToValueAutomationEvent(automationEvent.value, eventTime, this._currenTime)
-                : automationEvent;
+                  ? createExtendedLinearRampToValueAutomationEvent(automationEvent.value, eventTime, this._currenTime)
+                  : automationEvent;
 
             if (index === -1) {
                 this._automationEvents.push(persistentAutomationEvent);
