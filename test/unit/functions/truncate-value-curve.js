@@ -41,6 +41,25 @@ describe('truncateValueCurve()', () => {
                     expect(truncateValueCurve(values, 6, 3)).to.deep.equal(truncatedValues);
                 });
             });
+
+            describe('with a curve which is to small to get truncated', () => {
+                let truncatedValues;
+                let values;
+
+                beforeEach(() => {
+                    truncatedValues = [2, 3];
+                    values = [2, 5];
+
+                    if (arrayType === 'Float32Array') {
+                        truncatedValues = new Float32Array(truncatedValues);
+                        values = new Float32Array(values);
+                    }
+                });
+
+                it('should truncate the curve', () => {
+                    expect(truncateValueCurve(values, 3, 1)).to.deep.equal(truncatedValues);
+                });
+            });
         });
     }
 });

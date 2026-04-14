@@ -6,7 +6,7 @@ export const truncateValueCurve = <Values extends number[] | Float32Array>(
     targetDuration: number
 ): Values => {
     const length = values.length;
-    const truncatedLength = Math.floor((targetDuration / originalDuration) * length) + 1;
+    const truncatedLength = Math.max(1, Math.floor((targetDuration / originalDuration) * length)) + 1;
     const truncatedValues = values instanceof Float32Array ? new Float32Array(truncatedLength) : values.slice(0, truncatedLength);
 
     for (let i = 0; i < truncatedLength; i += 1) {
