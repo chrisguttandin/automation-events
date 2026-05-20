@@ -12,7 +12,9 @@ export default defineConfig({
                     ? [{ browser: 'chrome', name: 'Chrome', provider: webdriverio() }]
                     : env.TARGET === 'firefox'
                       ? [{ browser: 'firefox', name: 'Firefox', provider: webdriverio() }]
-                      : []
+                      : env.TARGET === 'safari'
+                        ? [{ browser: 'safari', headless: false, name: 'Safari', provider: webdriverio() }]
+                        : []
                 : [
                       { browser: 'chrome', headless: true, name: 'Chrome', provider: webdriverio() },
                       {
