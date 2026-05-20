@@ -40,7 +40,7 @@
         "vitest": "^4.1.6"
     },
     "engines": {
-        "node": ">=18.2.0"
+        "node": ">=22.22.2"
     },
     "files": [
         "build/es2019/",
