@@ -58,6 +58,7 @@
     "main": "build/node/module.js",
     "module": "build/es2019/module.js",
     "name": "automation-events",
+    "packageManager": "npm@12",
     "repository": {
         "type": "git",
         "url": "https://github.com/chrisguttandin/automation-events.git"
